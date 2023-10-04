@@ -4,6 +4,7 @@ const moviesModel = new mongoose.Schema({
   title: {
     type: String,
     trim: true,
+    unique: [true, "this movie is already listed!"],
     required: [true, "movie name must be non-empty"],
   },
   description: {

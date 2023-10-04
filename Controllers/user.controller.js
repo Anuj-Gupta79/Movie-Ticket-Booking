@@ -100,18 +100,44 @@ exports.getUserByEmail = async (req, res) => {
   }
 };
 
-//delete the user
-exports.deleteUser = async(req, res) => {
-    try {
-        const email = req.params.email;
-        const deletedUser = userModel.findOneAndDelete({email});
+// edit user
+exports.updateUser = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const requestedChanges = req.body;
 
-        if(deletedUser){
-            return res.status(200).send({message : "user deleted successfully!"});
-        }
-
-        return res.status(404).send({message : "user not found"});
-    } catch (error) {
-        res.status(400).send({message : "server error"});
+    if (Object.keys(requestedChanges).length === 0) {
+      return res.status(409).send({ message: "nothing to update." });
     }
-}
+
+    const updatedUser = await userModel.findOneAndUpdate(
+      { email: email },
+      requestedChanges,
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).send({ message: "User not found." });
+    }
+
+    res.status(200).send({ message: "user has been updated successfully." });
+  } catch (error) {
+    res.status(400).send({ message: error.message });
+  }
+};
+
+//delete the user
+exports.deleteUser = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const deletedUser = userModel.findOneAndDelete({ email });
+
+    if (deletedUser) {
+      return res.status(200).send({ message: "user deleted successfully!" });
+    }
+
+    return res.status(404).send({ message: "user not found" });
+  } catch (error) {
+    res.status(400).send({ message: "server error" });
+  }
+};

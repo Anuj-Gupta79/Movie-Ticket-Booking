@@ -15,14 +15,13 @@ const theatreModel = new mongoose.Schema({
   },
   state: {
     type: String,
-    required: [true, "theatre's state must be non-empty"],
   },
   zip_code: {
     type: Number,
     required: [true, "theatre's zip code must be non-empty"],
     validate: {
       validator: function (v) {
-        return v >= 100000 && v <= 99999;
+        return v >= 10000 && v <= 99999;
       },
       message: "theatre's zip code must be of length 5.",
     },
@@ -31,6 +30,10 @@ const theatreModel = new mongoose.Schema({
     type: Number,
     required: [true, "theatre address must be non-empty"],
   },
+  theatre_code : {
+    type : String,
+    required : true
+  }
 });
 
 module.exports = mongoose.model("theatre", theatreModel);
