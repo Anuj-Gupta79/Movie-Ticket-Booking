@@ -1,15 +1,14 @@
 const express = require('express');
-const dotenv = require('dotenv');
+const db = require('./Config/db.connection');
+const userRoutes = require('./Routes/user.routes');
 const app = express();
 
-dotenv.config();
-const PORT = process.env.server_port;
-
+db.connect();
+app.use(express.json());
+app.use('/user', userRoutes);
 
 app.get('/', (req, res)=>{
     res.send('Ticket Booking Server is running fine!!!');
 })
 
-app.listen(PORT, ()=>{
-    console.log(`Server is listening on http://localhost:${PORT}`);
-})
+module.exports = app
