@@ -46,12 +46,24 @@ exports.getTheatreList = async (req, res) => {
   }
 };
 
-// get the theatre by
+// get the specific theatre
+exports.getTheatreByID = async (req, res) => {
+  try {
+    const theatreID = req.params.id;
+    const theatre = await theatreModel.findById(theatreID);
+
+    if (!theatre) {
+      return res.status(404).send({ message: "Theatre not found." });
+    }
+
+    res.status(200).send(theatre);
+  } catch (error) {}
+};
 
 // update theatre details
 exports.updateTheatre = async (req, res) => {
   try {
-    const theatreCode = req.params.theatre_code;
+    const theatreID = req.params.id;
     const requestedChanges = req.body;
 
     if (Object.keys(requestedChanges).length === 0) {
@@ -59,7 +71,7 @@ exports.updateTheatre = async (req, res) => {
     }
 
     const updatedTheatre = theatreModel.findOneAndUpdate(
-      { theatre_code: theatreCode },
+      { _id: theatreID },
       requestedChanges,
       { new: true }
     );
